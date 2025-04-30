@@ -10,7 +10,7 @@ class LeadController extends Controller
 {
     public function index()
     {
-        $leads = Lead::with('category')->get();
+        $leads = Lead::with('category')->orderBy('created_at', 'desc')->get();
         return view('leads.index', compact('leads'));
     }
 
