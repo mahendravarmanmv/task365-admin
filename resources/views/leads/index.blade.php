@@ -25,6 +25,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Lead Cost</th>
+                                <th>Stock</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -37,6 +38,7 @@
                                 <td>{{ $lead->lead_email }}</td>
                                 <td>{{ $lead->lead_phone }}</td>
                                 <td>{{ $lead->lead_cost }}</td>
+                                <td>{{ $lead->stock }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <a class="btn btn-primary" href="{{ route('leads.edit', $lead->id) }}"><i class="fa fa-lg fa-edit"></i></a>

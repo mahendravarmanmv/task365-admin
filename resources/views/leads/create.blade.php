@@ -158,6 +158,14 @@
             @enderror
           </div>
 
+          <div class="mb-3">
+            <label>Stock</label>
+            <input type="number" name="stock" class="form-control" placeholder="stock" value="{{ old('stock') }}">
+            @error('stock')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+          </div>
+
 
 
           {{-- When do you need service --}}

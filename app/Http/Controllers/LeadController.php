@@ -37,6 +37,7 @@ class LeadController extends Controller
         'budget_min' => 'nullable|integer|min:0',
         'budget_max' => 'nullable|integer|min:0|gte:budget_min',
         'lead_cost' => 'nullable|string|max:255',
+        'stock' => 'nullable|integer|min:0',
         'service_timeframe' => 'nullable|string|max:255',
     ]);
 
@@ -55,6 +56,7 @@ class LeadController extends Controller
         'budget_min' => $request->budget_min,
         'budget_max' => $request->budget_max,
         'lead_cost' => $request->lead_cost,
+        'stock' => $request->stock,
         'service_timeframe' => $request->service_timeframe,
     ]);
 
@@ -93,6 +95,7 @@ class LeadController extends Controller
         'budget_min' => 'nullable|integer|min:0',
         'budget_max' => 'nullable|integer|min:0|gte:budget_min',
         'lead_cost' => 'nullable|string|max:255',
+        'stock' => 'nullable|integer|min:0',
         'service_timeframe' => 'nullable|string|max:255',
     ]);
 
