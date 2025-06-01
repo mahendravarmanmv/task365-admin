@@ -125,31 +125,38 @@
           </div>
 
           {{-- Budget Range --}}
-<div class="mb-3">
-  <label>Budget Range</label>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="input-group">
-        <span class="input-group-text">$</span>
-        <input type="number" name="budget_min" class="form-control" placeholder="Minimum Budget" value="{{ old('budget_min', $lead->budget_min) }}">
-      </div>
-      @error('budget_min')
-      <div class="text-danger">{{ $message }}</div>
-      @enderror
-    </div>
-    <div class="col-md-6">
-      <div class="input-group">
-        <span class="input-group-text">$</span>
-        <input type="number" name="budget_max" class="form-control" placeholder="Maximum Budget" value="{{ old('budget_max', $lead->budget_max) }}">
-      </div>
-      @error('budget_max')
-      <div class="text-danger">{{ $message }}</div>
-      @enderror
-    </div>
-  </div>
-</div>
+          <div class="mb-3">
+            <label>Client Budget Range</label>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" name="budget_min" class="form-control" placeholder="Minimum Budget" value="{{ old('budget_min', $lead->budget_min) }}">
+                </div>
+                @error('budget_min')
+                <div class="text-danger">{{ $message }}</div>
+                @enderror
+              </div>
+              <div class="col-md-6">
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" name="budget_max" class="form-control" placeholder="Maximum Budget" value="{{ old('budget_max', $lead->budget_max) }}">
+                </div>
+                @error('budget_max')
+                <div class="text-danger">{{ $message }}</div>
+                @enderror
+              </div>
+            </div>
+          </div>
 
-
+          {{-- Lead Cost --}}
+          <div class="mb-3">
+            <label>Lead Cost</label>
+            <input type="text" name="lead_cost" class="form-control" placeholder="Lead Cost" value="{{ old('lead_cost', $lead->lead_cost) }}">
+            @error('lead_cost')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+          </div>
 
 
           {{-- When do you need service --}}

@@ -114,6 +114,7 @@
       <li><a class="app-menu__item <?=($firstParam=="categories")?"active":""?>" href="{{ route('categories.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Categories</span></a></li>
       <li><a class="app-menu__item <?=($firstParam=="vendors")?"active":""?>" href="{{ route('vendors.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Vendors</span></a></li>
       <li><a class="app-menu__item <?=($firstParam=="leads")?"active":""?>" href="{{ route('leads.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Leads</span></a></li>
+      <li><a class="app-menu__item <?=($firstParam=="banner")?"active":""?>" href="{{ route('banner.edit') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Banner</span></a></li>
     </ul>
   </aside>
   <main class="app-content">

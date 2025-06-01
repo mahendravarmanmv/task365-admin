@@ -127,7 +127,7 @@
 
           {{-- Budget Range --}}
           <div class="mb-3">
-            <label>Budget Range</label>
+            <label>Client Budget Range</label>
             <div class="row">
               <div class="col-md-6">
                 <div class="input-group">
@@ -148,6 +148,14 @@
                 @enderror
               </div>
             </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Lead cost</label>
+            <input type="text" name="lead_cost" class="form-control" placeholder="Lead Cost" value="{{ old('lead_cost') }}">
+            @error('lead_cost')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
           </div>
 
 

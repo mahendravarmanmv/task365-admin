@@ -24,7 +24,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Notes</th>
+                                <th>Lead Cost</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -36,7 +36,7 @@
                                 <td>{{ $lead->lead_name }}</td>
                                 <td>{{ $lead->lead_email }}</td>
                                 <td>{{ $lead->lead_phone }}</td>
-                                <td>{{ $lead->lead_notes }}</td>
+                                <td>{{ $lead->lead_cost }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <a class="btn btn-primary" href="{{ route('leads.edit', $lead->id) }}"><i class="fa fa-lg fa-edit"></i></a>
@@ -67,6 +67,8 @@
 <script type="text/javascript" src="{{ asset('assets/js/plugins/jquery.dataTables.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/plugins/dataTables.bootstrap.min.js') }}"></script>
 <script type="text/javascript">
-    $('#sampleTable').DataTable();
+    $('#sampleTable').DataTable({
+        order: [[0, 'desc']] // Sorts first column (ID) in descending order
+    });
 </script>
 @endsection

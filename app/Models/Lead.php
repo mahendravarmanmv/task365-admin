@@ -23,6 +23,7 @@ class Lead extends Model
         'reference_website',
         'budget_min',
         'budget_max',
+        'lead_cost',
         'service_timeframe',
     ];    
 

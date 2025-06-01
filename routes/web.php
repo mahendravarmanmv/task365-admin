@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -94,6 +95,10 @@ Route::middleware('auth')->group(function () {
 	Route::resource('users', UserController::class);
     Route::resource('vendors', VendorController::class);
     Route::resource('leads', LeadController::class);
+
+    Route::get('banner/edit', [BannerController::class, 'edit'])->name('banner.edit');
+    Route::post('banner/update', [BannerController::class, 'update'])->name('banner.update');
+
 });
 
 /*require __DIR__.'/auth.php';*/

@@ -10,7 +10,7 @@ class LeadController extends Controller
 {
     public function index()
     {
-        $leads = Lead::with('category')->orderBy('created_at', 'desc')->get();
+        $leads = Lead::with('category')->orderBy('id', 'desc')->get();
         return view('leads.index', compact('leads'));
     }
 
@@ -36,6 +36,7 @@ class LeadController extends Controller
         'reference_website' => 'nullable|string|max:255',
         'budget_min' => 'nullable|integer|min:0',
         'budget_max' => 'nullable|integer|min:0|gte:budget_min',
+        'lead_cost' => 'nullable|string|max:255',
         'service_timeframe' => 'nullable|string|max:255',
     ]);
 
@@ -53,6 +54,7 @@ class LeadController extends Controller
         'reference_website' => $request->reference_website,
         'budget_min' => $request->budget_min,
         'budget_max' => $request->budget_max,
+        'lead_cost' => $request->lead_cost,
         'service_timeframe' => $request->service_timeframe,
     ]);
 
@@ -90,6 +92,7 @@ class LeadController extends Controller
         'reference_website' => 'nullable|string|max:255',
         'budget_min' => 'nullable|integer|min:0',
         'budget_max' => 'nullable|integer|min:0|gte:budget_min',
+        'lead_cost' => 'nullable|string|max:255',
         'service_timeframe' => 'nullable|string|max:255',
     ]);
 
