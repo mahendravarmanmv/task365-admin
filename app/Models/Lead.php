@@ -26,6 +26,7 @@ class Lead extends Model
         'lead_cost',
         'stock',
         'service_timeframe',
+        'button_text',
     ];    
 
     public function category()

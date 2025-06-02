@@ -39,6 +39,7 @@ class LeadController extends Controller
         'lead_cost' => 'nullable|string|max:255',
         'stock' => 'nullable|integer|min:0',
         'service_timeframe' => 'nullable|string|max:255',
+        'button_text' => 'nullable|string|max:255',
     ]);
 
     Lead::create([
@@ -58,6 +59,7 @@ class LeadController extends Controller
         'lead_cost' => $request->lead_cost,
         'stock' => $request->stock,
         'service_timeframe' => $request->service_timeframe,
+        'button_text' => $request->button_text ?? 'Buy Now', // default if not provided
     ]);
 
     return redirect()->route('leads.index')->with('success', 'Lead created successfully.');
@@ -97,7 +99,11 @@ class LeadController extends Controller
         'lead_cost' => 'nullable|string|max:255',
         'stock' => 'nullable|integer|min:0',
         'service_timeframe' => 'nullable|string|max:255',
+        'button_text' => 'nullable|string|max:255',
     ]);
+
+    // Ensure 'button_text' has a default if omitted
+    $validatedData['button_text'] = $request->input('button_text', 'Buy Now');
 
     $lead->update($validatedData);
 

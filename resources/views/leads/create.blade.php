@@ -159,9 +159,17 @@
           </div>
 
           <div class="mb-3">
-            <label>Stock</label>
-            <input type="number" name="stock" class="form-control" placeholder="stock" value="{{ old('stock') }}">
+            <label>No of Sales</label>
+            <input type="number" name="stock" class="form-control" placeholder="No of Sales" value="{{ old('stock') }}">
             @error('stock')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
+            <label>Button Text</label>
+            <input type="text" name="button_text" class="form-control" placeholder="Button Text (e.g., Buy Now)" value="{{ old('button_text', 'Buy Now') }}">
+            @error('button_text')
             <div class="text-danger">{{ $message }}</div>
             @enderror
           </div>
