@@ -14,7 +14,7 @@
   <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
   <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
   <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-  <title>Admin Task-365</title>
+  <title>Admin Panel Task-365</title>
   <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon/Task-365-Logo.png') }}" />
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -116,6 +116,7 @@
       <li><a class="app-menu__item <?=($firstParam=="vendors")?"active":""?>" href="{{ route('vendors.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Vendors</span></a></li>
       <li><a class="app-menu__item <?=($firstParam=="leads")?"active":""?>" href="{{ route('leads.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Leads</span></a></li>
       <li><a class="app-menu__item <?=($firstParam=="banner")?"active":""?>" href="{{ route('banner.edit') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Banner</span></a></li>
+      <li><a class="app-menu__item <?=($firstParam=="payments")?"active":""?>" href="{{ route('payments.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Payments</span></a></li>
     </ul>
   </aside>
   <main class="app-content">
