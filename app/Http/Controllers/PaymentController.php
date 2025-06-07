@@ -9,7 +9,7 @@ class PaymentController extends Controller
 {
     public function adminIndex()
     {
-        $payments = Payment::orderBy('created_at', 'desc')->paginate(20);
+        $payments = Payment::with(['lead.category'])->orderBy('created_at', 'desc')->paginate(20);
         return view('payments.index', compact('payments'));
     }
 }

@@ -20,9 +20,10 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
+
                                 <th>Email</th>
-                                <th>Phone</th>
+                                <th>Lead Name</th>
+                                <th>Lead Category</th>
                                 <th>Amount</th>
                                 <th>Payment ID</th>
                                 <th>Order ID</th>
@@ -34,9 +35,10 @@
                             @forelse ($payments as $payment)
                             <tr>
                                 <td>{{ $payment->id }}</td>
-                                <td>{{ $payment->name }}</td>
+
                                 <td>{{ $payment->email }}</td>
-                                <td>{{ $payment->phone }}</td>
+                                <td>{{ $payment->lead->lead_name ?? 'N/A' }}</td>
+                                <td>{{ $payment->lead->category->category_title ?? 'N/A' }}</td>
                                 <td>{{ number_format($payment->amount, 2) }}</td>
                                 <td>{{ $payment->payment_id ?? 'N/A' }}</td>
                                 <td>{{ $payment->order_id ?? 'N/A' }}</td>

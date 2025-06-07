@@ -29,8 +29,19 @@ class Lead extends Model
         'button_text',
     ];    
 
+    /**
+     * Get the category that the lead belongs to.
+     */
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get all payments associated with this lead.
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'lead_id');
     }
 }
