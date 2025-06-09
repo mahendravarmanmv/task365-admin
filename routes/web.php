@@ -13,6 +13,7 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ContactAdminController;
 use Illuminate\Http\Request;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -99,8 +100,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('banner/edit', [BannerController::class, 'edit'])->name('banner.edit');
     Route::post('banner/update', [BannerController::class, 'update'])->name('banner.update');
-
     Route::get('/payments', [PaymentController::class, 'adminIndex'])->name('payments.index');
+
+    
+    Route::get('/contacts', [ContactAdminController::class, 'index'])->name('contacts.index');
+
 
 });
 

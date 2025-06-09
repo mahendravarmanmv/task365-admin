@@ -117,6 +117,7 @@
       <li><a class="app-menu__item <?=($firstParam=="leads")?"active":""?>" href="{{ route('leads.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Leads</span></a></li>
       <li><a class="app-menu__item <?=($firstParam=="banner")?"active":""?>" href="{{ route('banner.edit') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Banner</span></a></li>
       <li><a class="app-menu__item <?=($firstParam=="payments")?"active":""?>" href="{{ route('payments.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Payments</span></a></li>
+      <li><a class="app-menu__item <?=($firstParam=="contacts")?"active":""?>" href="{{ route('contacts.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Contact Us Submissions</span></a></li>
     </ul>
   </aside>
   <main class="app-content">
