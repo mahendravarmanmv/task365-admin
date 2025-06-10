@@ -15,12 +15,10 @@
         <div class="tile">
             <div class="tile-body">
                 <div class="table-responsive">
-
                     <table class="table table-hover table-bordered" id="sampleTable">
                         <thead>
                             <tr>
                                 <th>ID</th>
-
                                 <th>Email</th>
                                 <th>Lead Name</th>
                                 <th>Lead Category</th>
@@ -35,7 +33,6 @@
                             @forelse ($payments as $payment)
                             <tr>
                                 <td>{{ $payment->id }}</td>
-
                                 <td>{{ $payment->email }}</td>
                                 <td>{{ $payment->lead->lead_name ?? 'N/A' }}</td>
                                 <td>{{ $payment->lead->category->category_title ?? 'N/A' }}</td>
@@ -57,6 +54,13 @@
                             </tr>
                             @endforelse
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-right">Total</th>
+                                <th id="amountTotal"></th>
+                                <th colspan="4"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -69,7 +73,5 @@
 <!-- Data table plugin-->
 <script type="text/javascript" src="{{ asset('assets/js/plugins/jquery.dataTables.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-<script type="text/javascript">
-    $('#sampleTable').DataTable();
-</script>
+<script type="text/javascript" src="{{ asset('assets/js/validations/payments.js') }}"></script>
 @endsection
