@@ -188,7 +188,7 @@
               <option value="Within a month" {{ old('service_timeline') == 'Within a month' ? 'selected' : '' }}>Within a month</option>
               <option value="After a month" {{ old('service_timeline') == 'After a month' ? 'selected' : '' }}>After a month</option>
             </select>
-            @error('service_timeline')
+            @error('service_timeframe')
             <div class="text-danger">{{ $message }}</div>
             @enderror
           </div>

@@ -21,59 +21,63 @@ class LeadController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'category_id' => 'required|exists:categories,id',
-        'lead_name' => 'required|string|max:255',
-        'lead_email' => 'nullable|email|unique:leads,lead_email',
-        'lead_phone' => 'nullable|string|max:20',
-        'lead_notes' => 'nullable|string',
-        'location' => 'nullable|string|max:255',
-        'business_name' => 'nullable|string|max:255',
-        'industry' => 'nullable|string|max:255',
-        'website_type' => 'nullable|string|max:255',
-        'features_needed' => 'nullable|string',
-        'reference_website' => 'nullable|string|max:255',
-        'budget_min' => 'nullable|integer|min:0',
-        'budget_max' => 'nullable|integer|min:0|gte:budget_min',
-        'lead_cost' => 'nullable|string|max:255',
-        'stock' => 'nullable|integer|min:0',
-        'service_timeframe' => 'nullable|string|max:255',
-        'button_text' => 'nullable|string|max:255',
-    ]);
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'lead_name' => 'required|string|max:255',
+            'lead_email' => 'required|email|unique:leads,lead_email',
+            'lead_phone' => [
+    'required',
+    'regex:/^[6-9]\d{9}$/',
+    'not_regex:/^(.)\1*$/', // Prevent repeated digits like 0000000000, 1111111111
+],
+            'lead_notes' => 'nullable|string', // Only this remains optional
+            'location' => 'required|string|max:255',
+            'business_name' => 'required|string|max:255',
+            'industry' => 'required|string|max:255',
+            'website_type' => 'required|string|max:255',
+            'features_needed' => 'required|string',
+            'reference_website' => 'required|string|max:255',
+            'budget_min' => 'required|integer|min:0',
+            'budget_max' => 'required|integer|min:0|gte:budget_min',
+            'lead_cost' => 'required|string|max:255',
+            'stock' => 'required|integer|min:0',
+            'service_timeframe' => 'required|string|max:255',
+            'button_text' => 'required|string|max:255',
+        ]);
 
-    // Generate lead_unique_id
-    $lastLead = \App\Models\Lead::orderByDesc('id')->first();
-    if ($lastLead && preg_match('/T365-(\d+)/', $lastLead->lead_unique_id, $matches)) {
-        $nextNumber = (int)$matches[1] + 1;
-    } else {
-        $nextNumber = 17;
+        // Generate lead_unique_id
+        $lastLead = \App\Models\Lead::orderByDesc('id')->first();
+        if ($lastLead && preg_match('/T365-(\d+)/', $lastLead->lead_unique_id, $matches)) {
+            $nextNumber = (int)$matches[1] + 1;
+        } else {
+            $nextNumber = 17;
+        }
+        $leadUniqueId = 'T365-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+
+        Lead::create([
+            'category_id' => $request->category_id,
+            'lead_name' => $request->lead_name,
+            'lead_email' => $request->lead_email,
+            'lead_phone' => $request->lead_phone,
+            'lead_notes' => $request->lead_notes,
+            'location' => $request->location,
+            'business_name' => $request->business_name,
+            'industry' => $request->industry,
+            'website_type' => $request->website_type,
+            'features_needed' => $request->features_needed,
+            'reference_website' => $request->reference_website,
+            'budget_min' => $request->budget_min,
+            'budget_max' => $request->budget_max,
+            'lead_cost' => $request->lead_cost,
+            'stock' => $request->stock,
+            'service_timeframe' => $request->service_timeframe,
+            'button_text' => $request->button_text ?? 'Buy Now', // default if not provided
+            'lead_unique_id' => $leadUniqueId,
+        ]);
+
+        return redirect()->route('leads.index')->with('success', 'Lead created successfully.');
     }
-    $leadUniqueId = 'T365-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
-
-    Lead::create([
-        'category_id' => $request->category_id,
-        'lead_name' => $request->lead_name,
-        'lead_email' => $request->lead_email,
-        'lead_phone' => $request->lead_phone,
-        'lead_notes' => $request->lead_notes,
-        'location' => $request->location,
-        'business_name' => $request->business_name,
-        'industry' => $request->industry,
-        'website_type' => $request->website_type,
-        'features_needed' => $request->features_needed,
-        'reference_website' => $request->reference_website,
-        'budget_min' => $request->budget_min,
-        'budget_max' => $request->budget_max,
-        'lead_cost' => $request->lead_cost,
-        'stock' => $request->stock,
-        'service_timeframe' => $request->service_timeframe,
-        'button_text' => $request->button_text ?? 'Buy Now', // default if not provided
-        'lead_unique_id' => $leadUniqueId,
-    ]);
-
-    return redirect()->route('leads.index')->with('success', 'Lead created successfully.');
-}
 
 
 
@@ -95,21 +99,25 @@ class LeadController extends Controller
         $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'lead_name' => 'required|string|max:255',
-            'lead_email' => 'nullable|email|unique:leads,lead_email,' . $lead->id,
-            'lead_phone' => 'nullable|string|max:20',
-            'lead_notes' => 'nullable|string',
-            'location' => 'nullable|string|max:255',
-            'business_name' => 'nullable|string|max:255',
-            'industry' => 'nullable|string|max:255',
-            'website_type' => 'nullable|string|max:255',
-            'features_needed' => 'nullable|string',
-            'reference_website' => 'nullable|string|max:255',
-            'budget_min' => 'nullable|integer|min:0',
-            'budget_max' => 'nullable|integer|min:0|gte:budget_min',
-            'lead_cost' => 'nullable|string|max:255',
-            'stock' => 'nullable|integer|min:0',
-            'service_timeframe' => 'nullable|string|max:255',
-            'button_text' => 'nullable|string|max:255',
+            'lead_email' => 'required|email|unique:leads,lead_email,' . $lead->id,
+            'lead_phone' => [
+                'required',
+                'regex:/^[6-9]\d{9}$/',
+                'not_regex:/^(.)\1*$/',
+            ],
+            'lead_notes' => 'nullable|string', // Only this is optional
+            'location' => 'required|string|max:255',
+            'business_name' => 'required|string|max:255',
+            'industry' => 'required|string|max:255',
+            'website_type' => 'required|string|max:255',
+            'features_needed' => 'required|string',
+            'reference_website' => 'required|string|max:255',
+            'budget_min' => 'required|integer|min:0',
+            'budget_max' => 'required|integer|min:0|gte:budget_min',
+            'lead_cost' => 'required|string|max:255',
+            'stock' => 'required|integer|min:0',
+            'service_timeframe' => 'required|string|max:255',
+            'button_text' => 'required|string|max:255',
         ]);
 
         // Ensure 'button_text' has a default if omitted
