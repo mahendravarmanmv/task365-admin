@@ -10,6 +10,7 @@ class Lead extends Model
     use HasFactory;
 
     protected $fillable = [
+        'lead_unique_id',
         'category_id',
         'lead_name',
         'lead_email',

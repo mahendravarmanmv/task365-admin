@@ -16,6 +16,9 @@
   <div class="col-md-10 mx-auto">
     <div class="tile">
       <div class="tile-body">
+        <div class="mb-4">
+          <h5>Lead Unique ID: <span class="text-success">{{ $lead->lead_unique_id }}</span></h5>
+        </div>
         <form action="{{ route('leads.update', $lead->id) }}" method="POST">
           @csrf
           @method('PUT')

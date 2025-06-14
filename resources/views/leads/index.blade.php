@@ -20,6 +20,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Lead Unique ID</th>
                                 <th>Category</th>
                                 <th>Name</th>
                                 <th>Email</th>
@@ -33,11 +34,12 @@
                             @foreach ($leads as $lead)
                             <tr>
                                 <td>{{ $lead->id }}</td>
+                                <td><strong class="text-success">{{ $lead->lead_unique_id }}</strong></td>
                                 <td>{{ $lead->category->category_title }}</td>
                                 <td>{{ $lead->lead_name }}</td>
                                 <td>{{ $lead->lead_email }}</td>
                                 <td>{{ $lead->lead_phone }}</td>
-                                <td>{{ $lead->lead_cost }}</td>
+                                <td>₹ {{ $lead->lead_cost }}</td>
                                 <td>{{ $lead->stock }}</td>
                                 <td>
                                     <div class="btn-group">
