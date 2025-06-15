@@ -20,4 +20,8 @@ class Category extends Model
     {
         return $this->belongsToMany(Vendor::class, 'user_categories', 'category_id', 'user_id');
     }
+	public function websiteTypes()
+	{
+	return $this->hasMany(WebsiteType::class);
+	}
 }

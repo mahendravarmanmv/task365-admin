@@ -34,6 +34,18 @@
             <div class="text-danger">{{ $message }}</div>
             @enderror
           </div>
+		  
+		  {{-- Website Type --}}
+			<div class="mb-3">
+			<label>Website Type</label>
+			<select name="website_type" class="form-control" id="websiteTypeSelect">
+			<option value="">Select Website Type</option>
+			{{-- Options will be populated dynamically --}}
+			</select>
+			@error('website_type')
+			<div class="text-danger">{{ $message }}</div>
+			@enderror
+			</div>
 
           {{-- Lead Name --}}
           <div class="mb-3">
@@ -78,25 +90,7 @@
             @error('business_name')
             <div class="text-danger">{{ $message }}</div>
             @enderror
-          </div>
-
-          {{-- Website Type --}}
-          <div class="mb-3">
-            <label>Website Type</label>
-            <select name="website_type" class="form-control">
-              <option value="">Select Website Type</option>
-              <option value="Small Business Website" {{ old('website_type') == 'Small Business Website' ? 'selected' : '' }}>Small Business Website</option>
-              <option value="Startup Website" {{ old('website_type') == 'Startup Website' ? 'selected' : '' }}>Startup Website</option>
-              <option value="Personal Website" {{ old('website_type') == 'Personal Website' ? 'selected' : '' }}>Personal Website</option>
-              <option value="Blogging Website" {{ old('website_type') == 'Blogging Website' ? 'selected' : '' }}>Blogging Website</option>
-              <option value="E-Commerce Website" {{ old('website_type') == 'E-Commerce Website' ? 'selected' : '' }}>E-Commerce Website</option>
-              <option value="Real Estate Website" {{ old('website_type') == 'Real Estate Website' ? 'selected' : '' }}>Real Estate Website</option>
-              <option value="Others" {{ old('website_type') == 'Others' ? 'selected' : '' }}>Others</option>
-            </select>
-            @error('website_type')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-          </div>
+          </div>			
 
           {{-- Features Needed --}}
           <div class="mb-3">
@@ -203,4 +197,38 @@
     </div>
   </div>
 </div>
+@endsection
+@section('page-specific-javascripts')
+<script>
+  $(document).ready(function () {
+    $('select[name="category_id"]').on('change', function () {
+      var categoryId = $(this).val();
+      var websiteTypeSelect = $('#websiteTypeSelect');
+
+      websiteTypeSelect.html('<option value="">Loading...</option>');
+
+      if (categoryId) {
+        $.ajax({
+          url: '/get-website-types/' + categoryId,
+          type: 'GET',
+          success: function (data) {
+            websiteTypeSelect.empty().append('<option value="">Select Website Type</option>');
+            if (data.length > 0) {
+              $.each(data, function (key, type) {
+                websiteTypeSelect.append('<option value="' + type.id + '">' + type.type_title + '</option>');
+              });
+            } else {
+              websiteTypeSelect.append('<option value="">No Website Types Found</option>');
+            }
+          },
+          error: function () {
+            websiteTypeSelect.html('<option value="">Error loading types</option>');
+          }
+        });
+      } else {
+        websiteTypeSelect.html('<option value="">Select Website Type</option>');
+      }
+    });
+  });
+</script>
 @endsection

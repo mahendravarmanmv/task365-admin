@@ -44,4 +44,8 @@ class Lead extends Model
     {
         return $this->hasMany(Payment::class, 'lead_id');
     }
+	public function websiteType()
+	{
+	return $this->belongsTo(\App\Models\WebsiteType::class);
+	}
 }

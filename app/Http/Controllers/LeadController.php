@@ -35,7 +35,7 @@ class LeadController extends Controller
             'location' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
             /*'industry' => 'required|string|max:255',*/
-            'website_type' => 'required|string|max:255',
+            'website_type' => 'required|exists:website_types,id',
             'features_needed' => 'required|string',
             'reference_website' => 'required|string|max:255',
             'budget_min' => 'required|integer|min:0',
@@ -109,7 +109,7 @@ class LeadController extends Controller
             'location' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
             /*'industry' => 'required|string|max:255',*/
-            'website_type' => 'required|string|max:255',
+            'website_type' => 'required|exists:website_types,id',
             'features_needed' => 'required|string',
             'reference_website' => 'required|string|max:255',
             'budget_min' => 'required|integer|min:0',

@@ -38,6 +38,26 @@
             <div class="text-danger">{{ $message }}</div>
             @enderror
           </div>
+		  
+		  {{-- Website Type --}}
+<div class="mb-3">
+  <label>Website Type</label>
+  <select name="website_type" class="form-control" id="websiteTypeSelect">
+    <option value="">Select Website Type</option>
+    @if($lead->category_id && $lead->website_type)
+      @php
+        $selectedType = \App\Models\WebsiteType::where('id', $lead->website_type)->first();
+      @endphp
+      @if($selectedType)
+        <option value="{{ $selectedType->id }}" selected>{{ $selectedType->title }}</option>
+      @endif
+    @endif
+  </select>
+  @error('website_type')
+  <div class="text-danger">{{ $message }}</div>
+  @enderror
+</div>
+
 
           {{-- Name --}}
           <div class="mb-3">
@@ -83,22 +103,6 @@
             <div class="text-danger">{{ $message }}</div>
             @enderror
           </div>         
-
-          {{-- Website Type --}}
-          <div class="mb-3">
-            <label>Website Type</label>
-            <select name="website_type" class="form-control">
-              <option value="">Select Website Type</option>
-              @foreach (['Small Business Website', 'Startup Website', 'Personal Website', 'Blogging Website', 'E-Commerce Website', 'Real Estate Website', 'Others'] as $option)
-              <option value="{{ $option }}" {{ old('website_type', $lead->website_type) == $option ? 'selected' : '' }}>
-                {{ $option }}
-              </option>
-              @endforeach
-            </select>
-            @error('website_type')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-          </div>
 
           {{-- Features Needed --}}
           <div class="mb-3">
@@ -205,4 +209,49 @@
     </div>
   </div>
 </div>
+@endsection
+
+@section('page-specific-javascripts')
+<script>
+  $(document).ready(function () {
+    function loadWebsiteTypes(categoryId, selectedId = null) {
+      var websiteTypeSelect = $('#websiteTypeSelect');
+      websiteTypeSelect.html('<option value="">Loading...</option>');
+
+      if (categoryId) {
+        $.ajax({
+          url: '/get-website-types/' + categoryId,
+          type: 'GET',
+          success: function (data) {
+            websiteTypeSelect.empty().append('<option value="">Select Website Type</option>');
+            $.each(data, function (key, type) {
+              websiteTypeSelect.append(
+                '<option value="' + type.id + '"' + (selectedId == type.id ? ' selected' : '') + '>' + type.type_title + '</option>'
+              );
+            });
+          },
+          error: function () {
+            websiteTypeSelect.html('<option value="">Error loading types</option>');
+          }
+        });
+      } else {
+        websiteTypeSelect.html('<option value="">Select Website Type</option>');
+      }
+    }
+
+    const initialCategoryId = $('select[name="category_id"]').val();
+    const selectedWebsiteTypeId = '{{ old('website_type', $lead->website_type) }}';
+
+    // Load on page load
+    if (initialCategoryId) {
+      loadWebsiteTypes(initialCategoryId, selectedWebsiteTypeId);
+    }
+
+    // Load on category change
+    $('select[name="category_id"]').on('change', function () {
+      loadWebsiteTypes($(this).val());
+    });
+  });
+</script>
+
 @endsection

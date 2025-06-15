@@ -84,7 +84,7 @@
       </li>
       <!-- User Menu-->
       <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
-        <ul class="dropdown-menu settings-menu dropdown-menu-right">          
+        <ul class="dropdown-menu settings-menu dropdown-menu-right">
           <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="fa fa-user fa-lg"></i> Profile</a></li>
           <li>
             <form action="{{ route('logout') }}" method="POST">
@@ -109,16 +109,41 @@
     </div>
     <?php
     $firstParam = request()->segment(1);
-?>
+    ?>
     <ul class="app-menu">
-      <li><a class="app-menu__item <?=($firstParam=="dashboard")?"active":""?>" href="{{ route('dashboard') }}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
-      <li><a class="app-menu__item <?=($firstParam=="categories")?"active":""?>" href="{{ route('categories.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Categories</span></a></li>
-      <li><a class="app-menu__item <?=($firstParam=="vendors")?"active":""?>" href="{{ route('vendors.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Vendors</span></a></li>
-      <li><a class="app-menu__item <?=($firstParam=="leads")?"active":""?>" href="{{ route('leads.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Leads</span></a></li>
-      <li><a class="app-menu__item <?=($firstParam=="banner")?"active":""?>" href="{{ route('banner.edit') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Banner</span></a></li>
-      <li><a class="app-menu__item <?=($firstParam=="payments")?"active":""?>" href="{{ route('payments.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Payments</span></a></li>
-      <li><a class="app-menu__item <?=($firstParam=="contacts")?"active":""?>" href="{{ route('contacts.index') }}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Contact Us Submissions</span></a></li>
-    </ul>
+  <li><a class="app-menu__item <?= ($firstParam == "dashboard") ? "active" : "" ?>" href="{{ route('dashboard') }}">
+    <i class="app-menu__icon fa fa-dashboard"></i>
+    <span class="app-menu__label">Dashboard</span></a></li>
+
+  <li><a class="app-menu__item <?= ($firstParam == "categories") ? "active" : "" ?>" href="{{ route('categories.index') }}">
+    <i class="app-menu__icon fa fa-folder-open"></i>
+    <span class="app-menu__label">Categories</span></a></li>
+
+  <li><a class="app-menu__item <?= ($firstParam == "website-types") ? "active" : "" ?>" href="{{ route('website-types.index') }}">
+    <i class="app-menu__icon fa fa-sitemap"></i>
+    <span class="app-menu__label">Website Types</span></a></li>
+
+  <li><a class="app-menu__item <?= ($firstParam == "vendors") ? "active" : "" ?>" href="{{ route('vendors.index') }}">
+    <i class="app-menu__icon fa fa-users"></i>
+    <span class="app-menu__label">Vendors</span></a></li>
+
+  <li><a class="app-menu__item <?= ($firstParam == "leads") ? "active" : "" ?>" href="{{ route('leads.index') }}">
+    <i class="app-menu__icon fa fa-address-card"></i>
+    <span class="app-menu__label">Leads</span></a></li>
+
+  <li><a class="app-menu__item <?= ($firstParam == "banner") ? "active" : "" ?>" href="{{ route('banner.edit') }}">
+    <i class="app-menu__icon fa fa-image"></i>
+    <span class="app-menu__label">Banner</span></a></li>
+
+  <li><a class="app-menu__item <?= ($firstParam == "payments") ? "active" : "" ?>" href="{{ route('payments.index') }}">
+    <i class="app-menu__icon fa fa-credit-card"></i>
+    <span class="app-menu__label">Payments</span></a></li>
+
+  <li><a class="app-menu__item <?= ($firstParam == "contacts") ? "active" : "" ?>" href="{{ route('contacts.index') }}">
+    <i class="app-menu__icon fa fa-envelope"></i>
+    <span class="app-menu__label">Contact Us Submissions</span></a></li>
+</ul>
+
   </aside>
   <main class="app-content">
     @yield('content')

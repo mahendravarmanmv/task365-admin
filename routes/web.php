@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ContactAdminController;
+use App\Http\Controllers\WebsiteTypeController;
 use Illuminate\Http\Request;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -102,7 +103,8 @@ Route::middleware('auth')->group(function () {
     Route::post('banner/update', [BannerController::class, 'update'])->name('banner.update');
     Route::get('/payments', [PaymentController::class, 'adminIndex'])->name('payments.index');
 
-    
+    Route::resource('website-types', WebsiteTypeController::class);
+	Route::get('/get-website-types/{category_id}', [WebsiteTypeController::class, 'getByCategory']);
     Route::get('/contacts', [ContactAdminController::class, 'index'])->name('contacts.index');
 
 
