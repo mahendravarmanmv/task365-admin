@@ -65,7 +65,7 @@ class VendorController extends Controller
                 'company_name' => 'nullable|string|max:255',
                 'website' => 'nullable|string|max:255',
                 'phone' => 'required|string|max:15',
-                'whatsapp_number' => 'nullable|string|max:15',
+                'alternative_number' => 'nullable|string|max:15',
                 'business_proof' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
                 'identity_proof' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
                 'categories' => 'array',
@@ -73,7 +73,7 @@ class VendorController extends Controller
             ]);
         }        
 
-        $data = $request->only(['name', 'email', 'company_name', 'website', 'phone', 'whatsapp_number']);
+        $data = $request->only(['name', 'email', 'company_name', 'website', 'phone', 'alternative_number']);
 
         $storagePath = '/home/u361181901/domains/task365.in/public_html/public/storage/identifications/';
 
