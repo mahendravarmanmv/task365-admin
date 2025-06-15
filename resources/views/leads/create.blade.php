@@ -80,15 +80,6 @@
             @enderror
           </div>
 
-          {{-- Industry/Niche --}}
-          <div class="mb-3">
-            <label>Industry/Niche</label>
-            <input type="text" name="industry" class="form-control" placeholder="Enter Industry or Niche" value="{{ old('industry') }}">
-            @error('industry')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-          </div>
-
           {{-- Website Type --}}
           <div class="mb-3">
             <label>Website Type</label>

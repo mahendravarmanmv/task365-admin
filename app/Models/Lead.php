@@ -18,7 +18,6 @@ class Lead extends Model
         'lead_notes',
         'location',
         'business_name',
-        'industry',
         'website_type',
         'features_needed',
         'reference_website',

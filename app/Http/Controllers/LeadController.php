@@ -34,7 +34,7 @@ class LeadController extends Controller
             'lead_notes' => 'nullable|string', // Only this remains optional
             'location' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
-            'industry' => 'required|string|max:255',
+            /*'industry' => 'required|string|max:255',*/
             'website_type' => 'required|string|max:255',
             'features_needed' => 'required|string',
             'reference_website' => 'required|string|max:255',
@@ -63,7 +63,7 @@ class LeadController extends Controller
             'lead_notes' => $request->lead_notes,
             'location' => $request->location,
             'business_name' => $request->business_name,
-            'industry' => $request->industry,
+            /*'industry' => $request->industry,*/
             'website_type' => $request->website_type,
             'features_needed' => $request->features_needed,
             'reference_website' => $request->reference_website,
@@ -108,7 +108,7 @@ class LeadController extends Controller
             'lead_notes' => 'nullable|string', // Only this is optional
             'location' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
-            'industry' => 'required|string|max:255',
+            /*'industry' => 'required|string|max:255',*/
             'website_type' => 'required|string|max:255',
             'features_needed' => 'required|string',
             'reference_website' => 'required|string|max:255',
