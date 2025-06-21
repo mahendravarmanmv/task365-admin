@@ -15,42 +15,50 @@
 <div class="row">
   <!-- Users -->
   <div class="col-md-6 col-lg-3">
+    <a href="{{ route('vendors.index') }}" class="text-decoration-none">
     <div class="widget-small primary coloured-icon"><i class="icon fa fa-users fa-3x"></i>
       <div class="info">
         <h4>Users</h4>
         <p><b>{{ $usersCount }}</b></p>
       </div>
     </div>
+    </a>
   </div>
 
   <!-- Leads -->
   <div class="col-md-6 col-lg-3">
+    <a href="{{ route('leads.index') }}" class="text-decoration-none">
     <div class="widget-small info coloured-icon"><i class="icon fa fa-paper-plane fa-3x"></i>
       <div class="info">
         <h4>Leads</h4>
         <p><b>{{ $leadsCount }}</b></p>
       </div>
     </div>
+    </a>
   </div>
 
   <!-- Payments -->
   <div class="col-md-6 col-lg-3">
+    <a href="{{ route('payments.index') }}" class="text-decoration-none">
     <div class="widget-small warning coloured-icon"><i class="icon fa fa-money fa-3x"></i>
       <div class="info">
         <h4>Payments</h4>
         <p><b>{{ $paymentsCount }}</b></p>
       </div>
     </div>
+    </a>
   </div>
 
   <!-- Categories -->
   <div class="col-md-6 col-lg-3">
+    <a href="{{ route('categories.index') }}" class="text-decoration-none">
     <div class="widget-small danger coloured-icon"><i class="icon fa fa-tags fa-3x"></i>
       <div class="info">
         <h4>Categories</h4>
         <p><b>{{ $categoriesCount }}</b></p>
       </div>
     </div>
+    </a>
   </div>
 </div>
 
@@ -94,7 +102,8 @@
       pointStrokeColor: "#fff",
       pointHighlightFill: "#fff",
       pointHighlightStroke: "rgba(151,187,205,1)",
-      data: {!! json_encode(array_replace(array_fill(1, 12, 0), $monthlySales)) !!}
+      data: {!! json_encode(array_values(array_replace(array_fill(0, 12, 0), $monthlySales))) !!}
+
     }]
   };
 

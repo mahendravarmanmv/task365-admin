@@ -27,13 +27,19 @@ class DashboardController extends Controller
 
         // Monthly sales for line chart (amount per month)
         $monthlySalesRaw = Payment::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
-                                  ->groupBy('month')
-                                  ->orderBy('month')
-                                  ->pluck('total', 'month')
-                                  ->toArray();
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
 
-        // Ensure all 12 months exist in the array
-        $monthlySales = array_replace(array_fill(1, 12, 0), $monthlySalesRaw);
+        // Convert 1–12 keys to 0–11 for JS compatibility
+        $monthlySalesZeroIndexed = [];
+        foreach ($monthlySalesRaw as $month => $total) {
+            $monthlySalesZeroIndexed[$month - 1] = $total;
+        }
+
+        // Ensure all 12 months exist from index 0 to 11
+        $monthlySales = array_replace(array_fill(0, 12, 0), $monthlySalesZeroIndexed);
 
         // Contact enquiries (user support messages)
         $supportRequests = [
