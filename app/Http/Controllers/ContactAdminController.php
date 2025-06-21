@@ -13,4 +13,12 @@ class ContactAdminController extends Controller
         $contacts = Contact::latest()->get(); // Pagination
         return view('contacts.index', compact('contacts'));
     }
+	public function markComplete($id)
+	{
+	$contact = Contact::findOrFail($id);
+	$contact->status = 'complete';
+	$contact->save();
+
+	return redirect()->back()->with('success', 'Marked as complete.');
+	}
 }

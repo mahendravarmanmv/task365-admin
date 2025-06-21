@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ContactAdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WebsiteTypeController;
 use Illuminate\Http\Request;
 
@@ -31,9 +32,9 @@ Route::get('/forgot-password', function () {
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
     ->name('password.email');
@@ -106,8 +107,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('website-types', WebsiteTypeController::class);
 	Route::get('/get-website-types/{category_id}', [WebsiteTypeController::class, 'getByCategory']);
     Route::get('/contacts', [ContactAdminController::class, 'index'])->name('contacts.index');
-
-
+    Route::put('/contacts/{id}/complete', [ContactAdminController::class, 'markComplete'])->name('admin.contacts.markComplete');
 });
 
 /*require __DIR__.'/auth.php';*/
