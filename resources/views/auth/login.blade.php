@@ -83,6 +83,6 @@
 
 <!-- jQuery Validate plugin -->
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
-<script src="{{ asset('assets/js/validations/login.js') }}"></script>
+<script src="{{ asset('assets/js/validations/login.js') }}?v=0.1"></script>
 </body>
 </html>
