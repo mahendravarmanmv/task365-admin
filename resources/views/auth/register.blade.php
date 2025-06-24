@@ -1,71 +1,72 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Main CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/register-main.css') }}">
-    <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Admin Registration - Task-365</title>
-  </head>
-  <body>
-    <section class="material-half-bg">
-      <div class="cover"></div>
-    </section>
-    <section class="login-content">
-      <div class="logo">
-        <h1>Task 365 - Admin Registration</h1>
-      </div>
-      <div class="login-box">
-        <form method="POST" class="login-form" action="{{ route('signup') }}">
-         @csrf
-          <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Register</h3>
-          <div class="form-group">
-            <label class="control-label">Name</label>
-            <input type="text" name="name" value="{{ old('name') }}" autofocus class="form-control" placeholder="Name">
-            @error('name')
-            <div class="text-danger mt-1">{{ $message }}</div>
-            @enderror
-          </div>
-          <div class="form-group">
-            <label class="control-label">Email</label>
-            <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="Email">
-            @error('email')
-            <div class="text-danger mt-1">{{ $message }}</div>
-            @enderror
-          </div>
-          <div class="form-group">
-            <label class="control-label">PASSWORD</label>
-            <input type="text" name="password" class="form-control" placeholder="Password">
-            @error('password')
-            <div class="text-danger mt-1">{{ $message }}</div>
-            @enderror
-          </div>
-          
-          <div class="form-group btn-container">            
-			<button type="submit" class="btn btn-primary btn-block">Register</button>
-          </div>
-          <div class="form-group text-center">
-          <p>Already have an account? <a href="{{ route('login') }}">Sign In</a></p>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Registration - Task 365</title>
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="{{ asset('assets/css/signup/bootstrap.min.css') }}" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{{ asset('assets/fontawesome/css/font-awesome.min.css') }}">
+</head>
+<body class="bg-teal d-flex align-items-center justify-content-center" style="min-height: 100vh; background: linear-gradient(135deg, #009688, #00796b);">
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="text-center text-white mb-4">
+          <h1 class="fw-bold fst-italic">Task 365 - Admin Registration</h1>
         </div>
-        </form>
+        <div class="card shadow-lg rounded-4">
+          <div class="card-body p-4">
+            <h3 class="text-center mb-4"><i class="fa fa-user me-2"></i>Register</h3>
+            <form method="POST" action="{{ route('signup') }}" id="registerForm">
+              @csrf
+
+              <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" value="{{ old('name') }}" class="form-control" placeholder="Enter your name" autofocus>
+                @error('name')
+                  <div class="text-danger small mt-1">{{ $message }}</div>
+                @enderror
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="Enter your email">
+                @error('email')
+                  <div class="text-danger small mt-1">{{ $message }}</div>
+                @enderror
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Choose a password">
+                @error('password')
+                  <div class="text-danger small mt-1">{{ $message }}</div>
+                @enderror
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-teal text-white" style="background-color: #009688;">Register</button>
+              </div>
+
+              <div class="text-center mt-3">
+                <small>Already have an account? <a href="{{ route('login') }}" class="text-decoration-none text-primary">Sign In</a></small>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-    </section>
-    <!-- Essential javascripts for application to work-->
-    <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
-    <!-- The javascript plugin to display page loading on top-->
-    <script src="{{ asset('assets/js/plugins/pace.min.js') }}"></script>
-    <script type="text/javascript">
-      // Login Page Flipbox control
-      $('.login-content [data-toggle="flip"]').click(function() {
-      	$('.login-box').toggleClass('flipped');
-      	return false;
-      });
-    </script>
-  </body>
+    </div>
+  </div>
+ <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- jQuery Validate plugin -->
+<script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('assets/js/validations/registration.js') }}"></script>
+
+</body>
 </html>
