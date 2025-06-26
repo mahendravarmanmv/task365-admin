@@ -46,8 +46,9 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        //Auth::login($user);
+		return redirect()->route('registration.success')
+            ->with('registration_success', true)
+            ->with('message', 'You have successfully registered. Your account will be activated soon. You will receive a confirmation email once it is activated.');
     }
 }

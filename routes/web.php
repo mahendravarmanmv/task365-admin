@@ -23,6 +23,10 @@ Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login'
 Route::get('/signup', [RegisteredUserController::class, 'create'])->name('signup');
 Route::post('/signup', [RegisteredUserController::class, 'store']);
 
+Route::get('/registration-success', function () {
+    return view('auth.registration-success');
+})->name('registration.success');
+
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
