@@ -19,7 +19,7 @@
                     <table class="table table-hover table-bordered" id="sampleTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>S.No</th>
                                 <th>Lead Unique ID</th>
                                 <th>Category</th>
                                 <th>Name</th>
@@ -33,7 +33,7 @@
                         <tbody>
                             @foreach ($leads as $lead)
                             <tr>
-                                <td>{{ $lead->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td><strong class="text-success">{{ $lead->lead_unique_id }}</strong></td>
                                 <td>{{ $lead->category->category_title }}</td>
                                 <td>{{ $lead->lead_name }}</td>
@@ -72,7 +72,14 @@
 <script type="text/javascript" src="{{ asset('assets/js/plugins/dataTables.bootstrap.min.js') }}"></script>
 <script type="text/javascript">
     $('#sampleTable').DataTable({
-        order: [[0, 'desc']] // Sorts first column (ID) in descending order
-    });
+    order: [[1, 'desc']], // Sort by second column (Lead Unique ID)
+    columnDefs: [
+        {
+            targets: 0, // first column (S.No)
+            orderable: false // disable sorting
+        }
+    ]
+});
+
 </script>
 @endsection

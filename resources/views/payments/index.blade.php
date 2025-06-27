@@ -18,47 +18,75 @@
                     <table class="table table-hover table-bordered" id="sampleTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Email</th>
-                                <th>Lead Name</th>
-                                <th>Lead Category</th>
-                                <th>Amount</th>
-                                <th>Payment ID</th>
-                                <th>Order ID</th>
+                                <th>Lead ID</th>
+                                <th>User Info</th>
+                                <th>Provider</th>
                                 <th>Status</th>
+                                <th>Order Info</th>
+                                <th>Lead Info</th>
+                                <th>Amount</th>
                                 <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($payments as $payment)
-                            <tr>
-                                <td>{{ $payment->id }}</td>
-                                <td>{{ $payment->email }}</td>
-                                <td>{{ $payment->lead->lead_name ?? 'N/A' }}</td>
-                                <td>{{ $payment->lead->category->category_title ?? 'N/A' }}</td>
-                                <td>{{ number_format($payment->amount, 2) }}</td>
-                                <td>{{ $payment->payment_id ?? 'N/A' }}</td>
-                                <td>{{ $payment->order_id ?? 'N/A' }}</td>
-                                <td>
-                                    @if($payment->status)
-                                    <b class="text-success">Paid</b>
-                                    @else
-                                    <b class="text-danger">Pending</b>
-                                    @endif
-                                </td>
-                                <td>{{ $payment->created_at->format('jS M Y gA') }}</td>
-                            </tr>
+                                @php $meta = $payment->payment_meta; @endphp
+                                <tr>
+                                    <td>{{ $payment->lead->lead_unique_id  }}</td>
+
+                                    {{-- User Info --}}
+                                    <td>
+                                        <b>Name:</b> {{ $payment->user->name ?? 'N/A' }}<br>
+                                        <b>Email:</b> {{ $payment->user->email ?? 'N/A' }}<br>
+                                        <b>Phone:</b> {{ $payment->user->phone ?? $meta['phone'] ?? 'N/A' }}
+                                    </td>
+
+                                    {{-- Provider --}}
+                                    <td>{{ ucfirst($meta['provider'] ?? 'N/A') }}</td>
+
+                                    {{-- Status --}}
+                                    <td>
+                                        @php $statusMsg = $meta['status_msg'] ?? null; @endphp
+                                        @if(str_contains(strtolower($statusMsg), 'success'))
+                                            <span class="badge badge-success">{{ $statusMsg }}</span>
+                                        @elseif(str_contains(strtolower($statusMsg), 'failed'))
+                                            <span class="badge badge-danger">{{ $statusMsg }}</span>
+                                        @elseif($statusMsg)
+                                            <span class="badge badge-warning">{{ $statusMsg }}</span>
+                                        @else
+                                            <span class="badge badge-secondary">Unknown</span>
+                                        @endif
+                                    </td>
+
+                                    {{-- Order Info --}}
+                                    <td>
+                                        <b>Order ID:</b> {{ $payment->order_id ?? 'N/A' }}<br>
+                                        <b>Payment ID:</b> {{ $payment->payment_id ?? 'N/A' }}
+                                    </td>
+
+                                    {{-- Lead Info --}}
+                                    <td>
+                                        <b>Name:</b> {{ $payment->lead->lead_name ?? 'N/A' }}<br>
+                                        <b>Category:</b> {{ $payment->lead->category->category_title ?? 'N/A' }}
+                                    </td>
+
+                                    {{-- Amount --}}
+                                    <td>₹{{ number_format($payment->amount, 2) }}</td>
+
+                                    {{-- Date --}}
+                                    <td>{{ \Carbon\Carbon::parse($payment->created_at)->format('jS M Y h:iA') }}</td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td colspan="9" class="text-center">No payment records found.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="8" class="text-center">No payment records found.</td>
+                                </tr>
                             @endforelse
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="4" class="text-right">Total</th>
-                                <th id="amountTotal"></th>
-                                <th colspan="4"></th>
+                                <th colspan="6" class="text-right">Total</th>
+                                <th id="amountTotal" class="text-bold"></th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>
