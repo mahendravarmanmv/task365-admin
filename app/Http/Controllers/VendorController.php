@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VendorApprovalMail;
 
 class VendorController extends Controller
 {
@@ -98,6 +100,11 @@ class VendorController extends Controller
         if ($request->has('toggle_approval')) {
             $vendor->approved = !$vendor->approved; // Toggle approval status
             $vendor->save();
+			
+			$statusMessage = $vendor->approved ? 'approved' : 'blocked';
+			// ✅ SEND EMAIL TO VENDOR
+			Mail::to($vendor->email)->send(new VendorApprovalMail($vendor, $statusMessage));
+			
             $status = $vendor->approved ? 'Vendor approved successfully' : 'Vendor blocked successfully';
             return redirect()->route('vendors.index')->with('success', $status);
         }       
