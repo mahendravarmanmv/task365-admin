@@ -34,7 +34,7 @@
 
                             @foreach ($vendors as $vendor)
                             <tr>
-                                <td>{{ $vendor->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $vendor->name }}</td>
                                 <td>{{ $vendor->email }}</td>
                                 <td>{{ $vendor->company_name }}</td>
