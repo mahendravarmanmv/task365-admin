@@ -51,10 +51,13 @@ class Payment extends Model
 
     $data = $json['original']['data'][0];
 
+    $paymentMethod = $data['payment_method'] ?? [];
+
     return [
         'name' => optional($this->user)->name ?? 'N/A',
-        'phone' => $data['payment_method']['app']['phone'] ?? optional($this->user)->phone ?? 'N/A',
-        'provider' => $data['payment_method']['app']['provider'] ?? 'N/A',
+        'phone' => $this->extractPhone($paymentMethod) ?? optional($this->user)->phone ?? 'N/A',
+        'provider' => $this->extractProvider($paymentMethod),
+		'payment_id' => $data['cf_payment_id'] ?? 'N/A',
         'status' => $data['payment_status'] ?? 'N/A',
         'status_msg' => match ($data['payment_status']) {
             'SUCCESS' => 'Payment Success',
@@ -65,5 +68,42 @@ class Payment extends Model
         },
     ];
 }
+
+
+private function extractProvider(array $method): string
+{
+    if (!empty($method['app']['provider'])) {
+        return ucfirst($method['app']['provider']);
+    }
+
+    if (!empty($method['netbanking']['netbanking_bank_name'])) {
+        return $method['netbanking']['netbanking_bank_name'];
+    }
+
+    if (!empty($method['card']['network'])) {
+        return ucfirst($method['card']['network']);
+    }
+
+    if (!empty($method['upi']['provider'])) {
+        return ucfirst($method['upi']['provider']);
+    }
+
+    return 'N/A';
+}
+
+private function extractPhone(array $method): ?string
+{
+    if (!empty($method['app']['phone'])) {
+        return $method['app']['phone'];
+    }
+
+    if (!empty($method['upi']['phone'])) {
+        return $method['upi']['phone'];
+    }
+
+    // Netbanking and cards typically don't include a phone
+    return null;
+}
+
 
 }

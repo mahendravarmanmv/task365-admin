@@ -37,7 +37,7 @@
                                     {{-- User Info --}}
                                     <td>
                                         <b>Name:</b> {{ $payment->user->name ?? 'N/A' }}<br>
-                                        <b>Email:</b> {{ $payment->user->email ?? 'N/A' }}<br>
+                                        <!--<b>Email:</b> {{ $payment->user->email ?? 'N/A' }}<br>-->
                                         <b>Phone:</b> {{ $payment->user->phone ?? $meta['phone'] ?? 'N/A' }}
                                     </td>
 
@@ -61,7 +61,7 @@
                                     {{-- Order Info --}}
                                     <td>
                                         <b>Order ID:</b> {{ $payment->order_id ?? 'N/A' }}<br>
-                                        <b>Payment ID:</b> {{ $payment->payment_id ?? 'N/A' }}
+                                        <b>Payment ID:</b> {{ $meta['payment_id'] ?? 'N/A' }}
                                     </td>
 
                                     {{-- Lead Info --}}
