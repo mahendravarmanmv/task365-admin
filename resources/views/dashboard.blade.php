@@ -18,7 +18,7 @@
     <a href="{{ route('vendors.index') }}" class="text-decoration-none">
     <div class="widget-small primary coloured-icon"><i class="icon fa fa-users fa-3x"></i>
       <div class="info">
-        <h4>Users</h4>
+        <h4>Vendors</h4>
         <p><b>{{ $usersCount }}</b></p>
       </div>
     </div>
