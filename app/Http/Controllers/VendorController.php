@@ -102,11 +102,13 @@ class VendorController extends Controller
             $vendor->save();
 			
 			$statusMessage = $vendor->approved ? 'approved' : 'blocked';
+			if($statusMessage=="approved"){
 			// ✅ SEND EMAIL TO VENDOR
 			Mail::to($vendor->email)->send(new VendorApprovalMail($vendor, $statusMessage));
+			}
 			
-            $status = $vendor->approved ? 'Vendor approved successfully' : 'Vendor blocked successfully';
-            return redirect()->route('vendors.index')->with('success', $status);
+            $err = $vendor->approved ? 'success' : 'error';
+            return redirect()->route('vendors.index')->with($err, "Vendor ".$statusMessage." successfully");
         }       
 
         $vendor->update($data);
