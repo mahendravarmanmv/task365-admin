@@ -47,13 +47,19 @@ class DashboardController extends Controller
             'complete' => Contact::where('status', 'complete')->count(),
         ];
 
+        $categoryUserData = Category::withCount('users')
+    ->orderByDesc('users_count')
+    ->get(['id', 'category_title']);
+
         return view('dashboard', compact(
-            'usersCount',
-            'leadsCount',
-            'paymentsCount',
-            'categoriesCount',
-            'monthlySales',
-            'supportRequests'
-        ));
+    'usersCount',
+    'leadsCount',
+    'paymentsCount',
+    'categoriesCount',
+    'monthlySales',
+    'supportRequests',
+    'categoryUserData' // ✅ THIS MUST BE INCLUDED
+));
+
     }
 }

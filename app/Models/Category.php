@@ -24,4 +24,8 @@ class Category extends Model
 	{
 	return $this->hasMany(WebsiteType::class);
 	}
+	public function users()
+	{
+	return $this->belongsToMany(User::class, 'user_categories', 'category_id', 'user_id');
+	}
 }

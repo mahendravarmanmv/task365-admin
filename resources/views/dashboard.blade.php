@@ -83,6 +83,29 @@
     </div>
   </div>
 </div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <h4 class="mb-3">Users Per Category</h4>
+    </div>
+
+    @forelse ($categoryUserData as $category)
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="widget-small info coloured-icon">
+                <i class="icon fa fa-folder fa-3x"></i>
+                <div class="info">
+                    <h5 class="text-dark">{{ $category->category_title }}</h5>
+                    <p><b>{{ $category->users_count }}</b> Users</p>
+                </div>
+            </div>
+        </div>
+    @empty
+        <div class="col-12">
+            <p class="text-muted">No categories or users found.</p>
+        </div>
+    @endforelse
+</div>
+
 @endsection
 
 @section('page-specific-javascripts')
