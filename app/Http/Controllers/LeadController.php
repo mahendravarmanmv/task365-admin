@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Lead;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Mail\LeadNotificationToAdmin;
+use App\Mail\LeadCategoryNotificationToUsers;
+use Illuminate\Support\Facades\Mail;
 
 class LeadController extends Controller
 {
@@ -55,7 +59,7 @@ class LeadController extends Controller
         }
         $leadUniqueId = 'T365-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
 
-        Lead::create([
+        $lead = Lead::create([
             'category_id' => $request->category_id,
             'lead_name' => $request->lead_name,
             'lead_email' => $request->lead_email,
@@ -75,6 +79,21 @@ class LeadController extends Controller
             'button_text' => $request->button_text ?? 'Buy Now', // default if not provided
             'lead_unique_id' => $leadUniqueId,
         ]);
+		
+		// ✅ Send to Admin
+    Mail::to('task365.in@gmail.com')->send(new LeadNotificationToAdmin($lead));
+
+    // ✅ Send to relevant Users
+    $users = User::where('user_type', 'user')
+                ->where('approved', 1)
+                ->whereHas('categories', function ($query) use ($lead) {
+                    $query->where('categories.id', $lead->category_id);
+                })
+                ->get();
+
+    foreach ($users as $user) {
+        Mail::to($user->email)->send(new LeadCategoryNotificationToUsers($lead));
+    }
 
         return redirect()->route('leads.index')->with('success', 'Lead created successfully.');
     }
