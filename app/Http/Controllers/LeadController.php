@@ -7,7 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Mail\LeadNotificationToAdmin;
-use App\Mail\LeadCategoryNotificationToUsers;
+use App\Mail\LeadCreatedMailToUsers;
 use Illuminate\Support\Facades\Mail;
 
 class LeadController extends Controller
@@ -81,7 +81,7 @@ class LeadController extends Controller
         ]);
 		
 		// ✅ Send to Admin
-    Mail::to('task365.in@gmail.com')->send(new LeadNotificationToAdmin($lead));
+    //Mail::to('task365.in@gmail.com')->send(new LeadNotificationToAdmin($lead));
 
     // ✅ Send to relevant Users
     $users = User::where('user_type', 'user')
@@ -92,10 +92,10 @@ class LeadController extends Controller
                 ->get();
 
     foreach ($users as $user) {
-        Mail::to($user->email)->send(new LeadCategoryNotificationToUsers($lead));
-    }
+    Mail::to($user->email)->queue(new LeadCreatedMailToUsers($lead)); // ✅ Use queue or send
+}
 
-        return redirect()->route('leads.index')->with('success', 'Lead created successfully.');
+        return redirect()->route('leads.index')->with('success', '✅ Lead created successfully and emails sent to users.');
     }
 
 

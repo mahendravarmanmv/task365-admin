@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Lead;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class LeadNotificationToAdmin extends Mailable implements ShouldQueue
 {
