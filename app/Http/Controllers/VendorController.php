@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\VendorApprovalMail;
+use App\Mail\VendorStatusMail;
 
 class VendorController extends Controller
 {
@@ -59,23 +59,55 @@ class VendorController extends Controller
 
     public function update(Request $request, Vendor $vendor)
     {
-        if (!$request->has('toggle_approval')){
+        // Step 1: Handle Rejection FIRST
+        if ($request->has('toggle_rejection')) {
+            $vendor->rejected = true;
+            $vendor->approved = false;
+            $vendor->save();
 
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email,' . $vendor->id,
-                'company_name' => 'nullable|string|max:255',
-                'website' => 'nullable|string|max:255',
-                'phone' => 'required|string|max:15',
-                'alternative_number' => 'nullable|string|max:15',
-                'business_proof' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-                'identity_proof' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-                'categories' => 'array',
-                'categories.*' => 'exists:categories,id',
-            ]);
-        }        
+            // Send rejection email
+            Mail::to($vendor->email)->send(new VendorStatusMail($vendor, 'rejected'));
 
-        $data = $request->only(['name', 'email', 'company_name', 'website', 'phone', 'alternative_number']);
+            return redirect()->route('vendors.index')->with('error', 'Vendor rejected successfully');
+        }
+
+        // Step 2: Handle Approval/Block
+        if ($request->has('toggle_approval')) {
+            $vendor->approved = !$vendor->approved;
+            $vendor->rejected = false; // Reset rejection if approving
+            $vendor->save();
+
+            $statusMessage = $vendor->approved ? 'approved' : 'blocked';
+            if ($vendor->approved) {
+                Mail::to($vendor->email)->send(new VendorStatusMail($vendor, $statusMessage));
+            }
+
+            $msgType = $vendor->approved ? 'success' : 'error';
+            return redirect()->route('vendors.index')->with($msgType, "Vendor $statusMessage successfully");
+        }
+
+        // Step 3: Validate Input (only if not approval/rejection toggle)
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $vendor->id,
+            'company_name' => 'nullable|string|max:255',
+            'website' => 'nullable|string|max:255',
+            'phone' => 'required|string|max:15',
+            'alternative_number' => 'nullable|string|max:15',
+            'business_proof' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+            'identity_proof' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+            'categories' => 'array',
+            'categories.*' => 'exists:categories,id',
+        ]);
+
+        $data = $request->only([
+            'name',
+            'email',
+            'company_name',
+            'website',
+            'phone',
+            'alternative_number'
+        ]);
 
         $storagePath = '/home/u361181901/domains/task365.in/public_html/public/storage/identifications/';
 
@@ -97,20 +129,6 @@ class VendorController extends Controller
             $data['identity_proof'] = 'identifications/' . $fileName;
         }
 
-        if ($request->has('toggle_approval')) {
-            $vendor->approved = !$vendor->approved; // Toggle approval status
-            $vendor->save();
-			
-			$statusMessage = $vendor->approved ? 'approved' : 'blocked';
-			if($statusMessage=="approved"){
-			// ✅ SEND EMAIL TO VENDOR
-			Mail::to($vendor->email)->send(new VendorApprovalMail($vendor, $statusMessage));
-			}
-			
-            $err = $vendor->approved ? 'success' : 'error';
-            return redirect()->route('vendors.index')->with($err, "Vendor ".$statusMessage." successfully");
-        }       
-
         $vendor->update($data);
 
         if ($request->has('categories')) {
@@ -119,6 +137,7 @@ class VendorController extends Controller
 
         return redirect()->route('vendors.index')->with('success', 'Vendor updated successfully');
     }
+
 
 
     public function destroy(Vendor $vendor)

@@ -18,6 +18,8 @@
                 <form action="{{ route('vendors.update', $vendor->id) }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
+
+                    <!-- Vendor Info -->
                     <div class="mb-3">
                         <label>Name</label>
                         <input type="text" name="name" class="form-control" value="{{ $vendor->name }}" placeholder="Enter Name">
@@ -78,21 +80,27 @@
                         <i class="fa fa-save"></i> Update Vendor
                     </button>
 
-                    <!-- Approve / Block Toggle Button -->
+                    <!-- Approve / Block Toggle -->
                     <button type="submit" class="btn {{ $vendor->approved ? 'btn-danger' : 'btn-success' }}" name="toggle_approval" value="1">
                         <i class="fa fa-fw fa-lg fa-check-circle"></i>
                         {{ $vendor->approved ? 'Block Vendor' : 'Approve Vendor' }}
                     </button>
 
+                    <!-- Reject Button -->
+                    @if(!$vendor->approved)
+                    <button type="submit" class="btn btn-warning" name="toggle_rejection" value="1"
+                        onclick="return confirm('Are you sure you want to reject this vendor?');">
+                        <i class="fa fa-fw fa-lg fa-times-circle"></i> Reject Vendor
+                    </button>
+                    @endif
+
+                    <!-- Cancel -->
                     <a class="btn btn-secondary" href="{{ route('vendors.index') }}">
                         <i class="fa fa-fw fa-lg fa-times-circle"></i> Cancel
                     </a>
-
                 </form>
             </div>
-
         </div>
     </div>
-
 </div>
 @endsection
