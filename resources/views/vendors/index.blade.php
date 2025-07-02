@@ -60,13 +60,15 @@
                                     <a href="{{ config('app.domain') . '/storage/' . $vendor->identity_proof }}" target="_blank">View</a>
                                     @endif
                                 </td>
-                                <td>
-                                    @if($vendor->approved)
-                                    <span class="badge bg-success">Approved</span>
-                                    @else
-                                    <span class="badge bg-danger">Pending</span>
-                                    @endif
-                                </td>
+								<td>
+								@if($vendor->rejected)
+								<span class="badge bg-warning">Rejected</span>
+								@elseif($vendor->approved)
+								<span class="badge bg-success">Approved</span>
+								@else
+								<span class="badge bg-danger">Pending</span>
+								@endif
+								</td>
                                 <td>
                                     <a href="{{ route('vendors.edit', $vendor->id) }}" class="btn btn-primary"><i class="fa fa-lg fa-edit"></i></a>
                                     <form action="{{ route('vendors.destroy', $vendor->id) }}" method="POST" style="display:inline;">
