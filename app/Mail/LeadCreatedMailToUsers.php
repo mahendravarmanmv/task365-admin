@@ -5,23 +5,36 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue; // ✅ If using queues
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Models\User;
 
 class LeadCreatedMailToUsers extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $lead;
+    public $user;
 
-    public function __construct($lead)
+    /**
+     * Create a new message instance.
+     */
+    public function __construct($lead, User $user)
     {
         $this->lead = $lead;
+        $this->user = $user;
     }
 
+    /**
+     * Build the message.
+     */
     public function build()
     {
-        return $this->subject('New Lead in Your Category')
-                    ->view('emails.lead-to-users'); // ✅ Make sure this blade file exists
+        return $this->subject('New Lead Generated from Your Task365.in "Buy Now" Link')
+                    ->view('emails.lead-to-users')
+                    ->with([
+                        'lead' => $this->lead,
+                        'vendor_name' => $this->user->name ?? 'Vendor',
+                        'lead_url' => url('/leads/' . $this->lead->id),
+                    ]);
     }
 }
-

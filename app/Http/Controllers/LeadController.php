@@ -91,9 +91,9 @@ class LeadController extends Controller
                 })
                 ->get();
 
-    foreach ($users as $user) {
-    Mail::to($user->email)->queue(new LeadCreatedMailToUsers($lead)); // ✅ Use queue or send
-}
+        foreach ($users as $user) {
+			Mail::to($user->email)->queue(new LeadCreatedMailToUsers($lead, $user)); // ✅ Use queue or send
+        }
 
         return redirect()->route('leads.index')->with('success', '✅ Lead created successfully and emails sent to users.');
     }
