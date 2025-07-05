@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Mail\LeadNotificationToAdmin;
 use App\Mail\LeadCreatedMailToUsers;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class LeadController extends Controller
 {
@@ -31,10 +32,10 @@ class LeadController extends Controller
             'lead_name' => 'required|string|max:255',
             'lead_email' => 'required|email|unique:leads,lead_email',
             'lead_phone' => [
-    'required',
-    'regex:/^[6-9]\d{9}$/',
-    'not_regex:/^(.)\1*$/', // Prevent repeated digits like 0000000000, 1111111111
-],
+                'required',
+                'regex:/^[6-9]\d{9}$/',
+                'not_regex:/^(.)\1*$/', // Prevent repeated digits like 0000000000, 1111111111
+            ],
             'lead_notes' => 'nullable|string', // Only this remains optional
             'location' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
@@ -48,16 +49,25 @@ class LeadController extends Controller
             'stock' => 'required|integer|min:0',
             'service_timeframe' => 'required|string|max:255',
             'button_text' => 'required|string|max:255',
+            'lead_file' => 'required|file|mimes:jpg,jpeg|max:2048', // max 2MB
         ]);
 
         // Generate lead_unique_id
-        $lastLead = \App\Models\Lead::orderByDesc('id')->first();
+        $lastLead = Lead::orderByDesc('id')->first();
         if ($lastLead && preg_match('/T365-(\d+)/', $lastLead->lead_unique_id, $matches)) {
             $nextNumber = (int)$matches[1] + 1;
         } else {
             $nextNumber = 17;
         }
         $leadUniqueId = 'T365-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+
+        // Handle the file upload
+        $fileName = null;
+        if ($request->hasFile('lead_file')) {
+            $file = $request->file('lead_file');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/leads', $fileName); // Stored in storage/app/public/leads
+        }
 
         $lead = Lead::create([
             'category_id' => $request->category_id,
@@ -78,21 +88,22 @@ class LeadController extends Controller
             'service_timeframe' => $request->service_timeframe,
             'button_text' => $request->button_text ?? 'Buy Now', // default if not provided
             'lead_unique_id' => $leadUniqueId,
+            'lead_file' => $fileName,
         ]);
-		
-		// ✅ Send to Admin
-    //Mail::to('task365.in@gmail.com')->send(new LeadNotificationToAdmin($lead));
 
-    // ✅ Send to relevant Users
-    $users = User::where('user_type', 'user')
-                ->where('approved', 1)
-                ->whereHas('categories', function ($query) use ($lead) {
-                    $query->where('categories.id', $lead->category_id);
-                })
-                ->get();
+        // ✅ Send to Admin
+        //Mail::to('task365.in@gmail.com')->send(new LeadNotificationToAdmin($lead));
+
+        // ✅ Send to relevant Users
+        $users = User::where('user_type', 'user')
+            ->where('approved', 1)
+            ->whereHas('categories', function ($query) use ($lead) {
+                $query->where('categories.id', $lead->category_id);
+            })
+            ->get();
 
         foreach ($users as $user) {
-			Mail::to($user->email)->queue(new LeadCreatedMailToUsers($lead, $user)); // ✅ Use queue or send
+            Mail::to($user->email)->queue(new LeadCreatedMailToUsers($lead, $user)); // ✅ Use queue or send
         }
 
         return redirect()->route('leads.index')->with('success', '✅ Lead created successfully and emails sent to users.');
@@ -124,10 +135,10 @@ class LeadController extends Controller
                 'regex:/^[6-9]\d{9}$/',
                 'not_regex:/^(.)\1*$/',
             ],
-            'lead_notes' => 'nullable|string', // Only this is optional
+            'lead_notes' => 'nullable|string',
             'location' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
-            /*'industry' => 'required|string|max:255',*/
+            // 'industry' => 'required|string|max:255',
             'website_type' => 'required|exists:website_types,id',
             'features_needed' => 'required|string',
             'reference_website' => 'required|string|max:255',
@@ -137,25 +148,46 @@ class LeadController extends Controller
             'stock' => 'required|integer|min:0',
             'service_timeframe' => 'required|string|max:255',
             'button_text' => 'required|string|max:255',
+            'lead_file' => 'nullable|file|mimes:jpg,jpeg|max:2048', // optional on update
         ]);
 
-        // Ensure 'button_text' has a default if omitted
+        // Ensure default value for button_text
         $validatedData['button_text'] = $request->input('button_text', 'Buy Now');
 
-        // Do not allow update of lead_unique_id
+        // Handle file upload if new file is uploaded
+        if ($request->hasFile('lead_file')) {
+            // Delete old file if exists
+            if ($lead->lead_file && Storage::exists('public/leads/' . $lead->lead_file)) {
+                Storage::delete('public/leads/' . $lead->lead_file);
+            }
+
+            // Store new file
+            $file = $request->file('lead_file');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/leads', $filename);
+            $validatedData['lead_file'] = $filename;
+        }
+
+        // Do not allow updating lead_unique_id
         unset($validatedData['lead_unique_id']);
 
         $lead->update($validatedData);
 
-        return redirect()->route('leads.index')->with('success', 'Lead updated successfully.');
+        return redirect()->route('leads.index')->with('success', '✅ Lead updated successfully.');
     }
-
-
 
 
     public function destroy(Lead $lead)
     {
+        // Delete associated lead file if it exists
+        if ($lead->lead_file && Storage::exists('public/leads/' . $lead->lead_file)) {
+            Storage::delete('public/leads/' . $lead->lead_file);
+        }
+
+        // Delete the lead record
         $lead->delete();
         return redirect()->route('leads.index')->with('success', 'Lead deleted successfully.');
     }
+
+    
 }

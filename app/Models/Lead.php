@@ -27,6 +27,7 @@ class Lead extends Model
         'stock',
         'service_timeframe',
         'button_text',
+        'lead_file',
     ];    
 
     /**
