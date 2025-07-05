@@ -11,9 +11,11 @@
 
     <p>
         <strong>Lead Source URL:</strong> 
-        <a href="{{ $lead_url ?? url('/leads/' . $lead->id) }}" target="_blank">
-            {{ $lead_url ?? url('/leads/' . $lead->id) }}
-        </a>
+        @php
+    $publicLeadUrl = 'https://task365.in/leads/' . $lead->id;
+@endphp
+
+<a href="{{ $publicLeadUrl }}" target="_blank">{{ $publicLeadUrl }}</a>
     </p>
 
     <p>This indicates that a user has shown interest in your service/product category and interacted with your link. Please feel free to follow up directly based on your internal process.</p>
