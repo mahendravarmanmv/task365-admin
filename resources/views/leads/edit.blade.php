@@ -157,20 +157,15 @@
 
           {{-- File Upload --}}
           <div class="mb-3">
-            <label>Uploaded Image (JPG/JPEG Only)</label>
-            <input type="file" name="lead_file" class="form-control">
-            @error('lead_file')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
+    <label class="form-label">Uploaded Image (JPG/JPEG Only)</label>
+    <input type="file" name="lead_file" class="form-control">
+    @error('lead_file') <span style="color: red;">{{ $message }}</span> @enderror
 
-            {{-- Display previously uploaded image --}}
-            @if ($lead->lead_file)
-            <div class="mt-2">
-              <p class="mb-1">Current Image:</p>
-              <img src="{{ asset('storage/leads/' . $lead->lead_file) }}" alt="Lead Image" style="max-width: 200px; height: auto;" class="border rounded">
-            </div>
-            @endif
-          </div>
+    @if(isset($lead) && $lead->lead_file)
+        <img src="{{ asset('storage/' . $lead->lead_file) }}" width="100" class="mt-2 border rounded">
+    @endif
+</div>
+
 
 
           {{-- Submit --}}

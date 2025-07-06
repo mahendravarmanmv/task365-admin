@@ -62,11 +62,9 @@ class LeadController extends Controller
         $leadUniqueId = 'T365-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
 
         // Handle the file upload
-        $fileName = null;
+        $filePath = null;
         if ($request->hasFile('lead_file')) {
-            $file = $request->file('lead_file');
-            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/leads', $fileName); // Stored in storage/app/public/leads
+            $filePath = $request->file('lead_file')->store('leads', 'public'); // returns "leads/filename.jpg"
         }
 
         $lead = Lead::create([
@@ -88,7 +86,7 @@ class LeadController extends Controller
             'service_timeframe' => $request->service_timeframe,
             'button_text' => $request->button_text ?? 'Buy Now', // default if not provided
             'lead_unique_id' => $leadUniqueId,
-            'lead_file' => $fileName,
+            'lead_file' => $filePath,
         ]);
 
         // ✅ Send to Admin
@@ -156,17 +154,14 @@ class LeadController extends Controller
 
         // Handle file upload if new file is uploaded
         if ($request->hasFile('lead_file')) {
-            // Delete old file if exists
-            if ($lead->lead_file && Storage::exists('public/leads/' . $lead->lead_file)) {
-                Storage::delete('public/leads/' . $lead->lead_file);
+            if ($lead->lead_file && Storage::disk('public')->exists($lead->lead_file)) {
+                Storage::disk('public')->delete($lead->lead_file);
             }
 
-            // Store new file
-            $file = $request->file('lead_file');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/leads', $filename);
-            $validatedData['lead_file'] = $filename;
+            $filePath = $request->file('lead_file')->store('leads', 'public');
+            $validatedData['lead_file'] = $filePath;
         }
+
 
         // Do not allow updating lead_unique_id
         unset($validatedData['lead_unique_id']);
