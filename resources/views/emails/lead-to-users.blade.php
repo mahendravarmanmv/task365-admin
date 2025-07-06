@@ -5,12 +5,12 @@
     <title>New Lead Generated from Your Task365.in "Buy Now" Link</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-    <p>Dear {{ $vendor_name ?? 'Vendor' }},</p>
+    <p>Dear {{ ucfirst($vendor_name ?? 'Vendor') }},</p>
 
-    <p>We’re pleased to inform you that a new lead has been generated through your "<strong>{{ $lead->button_text }}</strong>" link on our website <a href="https://task365.in" target="_blank">Task365.in</a>.</p>
+	<p>We’re pleased to inform you that a new lead has been generated for your category on our website <a href="https://task365.in" target="_blank">Task365.in</a>.</p>
 
     <p>
-        <strong>Lead Source URL:</strong> 
+        <strong>Buy Now:</strong> 
         @php
     $publicLeadUrl = 'https://task365.in/leads/' . $lead->id;
 @endphp

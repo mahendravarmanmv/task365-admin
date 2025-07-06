@@ -29,7 +29,7 @@ class LeadCreatedMailToUsers extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('New Lead Generated from Your Task365.in "Buy Now" Link')
+        return $this->subject('New Lead Generated from Your Task365.in "Lead ID: ' . $this->lead->lead_unique_id . '"')
                     ->view('emails.lead-to-users')
                     ->with([
                         'lead' => $this->lead,
