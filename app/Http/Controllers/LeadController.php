@@ -34,12 +34,11 @@ class LeadController extends Controller
             'lead_phone' => [
                 'required',
                 'regex:/^[6-9]\d{9}$/',
-                'not_regex:/^(.)\1*$/', // Prevent repeated digits like 0000000000, 1111111111
+                'not_regex:/^(.)\1*$/',
             ],
-            'lead_notes' => 'nullable|string', // Only this remains optional
+            'lead_notes' => 'nullable|string',
             'location' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
-            /*'industry' => 'required|string|max:255',*/
             'website_type' => 'required|exists:website_types,id',
             'features_needed' => 'required|string',
             'reference_website' => 'required|string|max:255',
@@ -49,24 +48,22 @@ class LeadController extends Controller
             'stock' => 'required|integer|min:0',
             'service_timeframe' => 'required|string|max:255',
             'button_text' => 'required|string|max:255',
-            'lead_file' => 'required|file|mimes:jpg,jpeg|max:2048', // max 2MB
+            'lead_file' => 'required|file|mimes:jpg,jpeg|max:2048',
         ]);
 
         // Generate lead_unique_id
         $lastLead = Lead::orderByDesc('id')->first();
-        if ($lastLead && preg_match('/T365-(\d+)/', $lastLead->lead_unique_id, $matches)) {
-            $nextNumber = (int)$matches[1] + 1;
-        } else {
-            $nextNumber = 17;
-        }
+        $nextNumber = ($lastLead && preg_match('/T365-(\d+)/', $lastLead->lead_unique_id, $matches))
+            ? (int)$matches[1] + 1
+            : 17;
         $leadUniqueId = 'T365-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
 
-        // Handle the file upload
-        $filePath = null;
-        if ($request->hasFile('lead_file')) {
-            $filePath = $request->file('lead_file')->store('leads', 'public'); // returns "leads/filename.jpg"
-        }
+        // Handle file upload
+        $filePath = $request->hasFile('lead_file')
+            ? $request->file('lead_file')->store('leads', 'public')
+            : null;
 
+        // Create lead
         $lead = Lead::create([
             'category_id' => $request->category_id,
             'lead_name' => $request->lead_name,
@@ -75,7 +72,6 @@ class LeadController extends Controller
             'lead_notes' => $request->lead_notes,
             'location' => $request->location,
             'business_name' => $request->business_name,
-            /*'industry' => $request->industry,*/
             'website_type' => $request->website_type,
             'features_needed' => $request->features_needed,
             'reference_website' => $request->reference_website,
@@ -84,15 +80,15 @@ class LeadController extends Controller
             'lead_cost' => $request->lead_cost,
             'stock' => $request->stock,
             'service_timeframe' => $request->service_timeframe,
-            'button_text' => $request->button_text ?? 'Buy Now', // default if not provided
+            'button_text' => $request->button_text ?? 'Buy Now',
             'lead_unique_id' => $leadUniqueId,
             'lead_file' => $filePath,
         ]);
 
         // ✅ Send to Admin
-        //Mail::to('task365.in@gmail.com')->send(new LeadNotificationToAdmin($lead));
+        /*Mail::to('task365.in@gmail.com')->send(new LeadNotificationToAdmin($lead));*/
 
-        // ✅ Send to relevant Users
+        // Fetch relevant users
         $users = User::where('user_type', 'user')
             ->where('approved', 1)
             ->whereHas('categories', function ($query) use ($lead) {
@@ -100,13 +96,26 @@ class LeadController extends Controller
             })
             ->get();
 
+        $phoneNumbers = [];
+
         foreach ($users as $user) {
-            Mail::to($user->email)->queue(new LeadCreatedMailToUsers($lead, $user)); // ✅ Use queue or send
+            // ✅ Send email
+            Mail::to($user->email)->queue(new LeadCreatedMailToUsers($lead, $user));
+
+            // 📲 Collect phone numbers
+            if ($user->phone) {
+                $phoneNumbers[] = $user->phone;
+            }
         }
 
-        return redirect()->route('leads.index')->with('success', '✅ Lead created successfully and emails sent to users.');
-    }
+        // ✅ Send bulk SMS if numbers exist
+        if (count($phoneNumbers)) {
+            $leadUrl = "task365.in/leads/{$lead->id}";
+            $this->sendBulkSMS($phoneNumbers, $leadUrl);
+        }
 
+        return redirect()->route('leads.index')->with('success', '✅ Lead created successfully, emails and SMS sent.');
+    }
 
 
     public function edit(Lead $lead)
@@ -119,8 +128,6 @@ class LeadController extends Controller
 
         return view('leads.edit', compact('lead', 'categories', 'budgetMin', 'budgetMax'));
     }
-
-
 
     public function update(Request $request, Lead $lead)
     {
@@ -171,7 +178,6 @@ class LeadController extends Controller
         return redirect()->route('leads.index')->with('success', '✅ Lead updated successfully.');
     }
 
-
     public function destroy(Lead $lead)
     {
         // Delete associated lead file if it exists
@@ -184,5 +190,42 @@ class LeadController extends Controller
         return redirect()->route('leads.index')->with('success', 'Lead deleted successfully.');
     }
 
+    public function sendBulkSMS(array $phoneNumbers, $leadUrl)
+    {
+        $username = env('SMS_USERNAME');
+        $password = env('SMS_PASSWORD');
+        $from = env('SMS_SENDER_ID');
+        $messagetype = 1;
+        $dnd_check = 0;
+
+        $message = "Task365: Dear User , New lead generated for your category. View details: ".$leadUrl." – by LORHAN SPOT EARN Private Limited. Thank you for choosing Task365.";
+        $messageEncoded = urlencode($message);
+
+        // Convert array to comma-separated string
+        $numbers = implode(',', $phoneNumbers);       
+
+        $request = [
+            'username' => $username,
+            'password' => $password,
+            'from' => $from,
+            'to' => $numbers,
+            'msg' => $messageEncoded,
+            'type' => $messagetype,
+            'dnd_check' => $dnd_check,
+        ];
+
+        $url = "https://www.smsstriker.com/API/sms.php";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        \Log::info("Bulk SMS Sent to: $numbers. Result: $result");
+    }
     
 }
