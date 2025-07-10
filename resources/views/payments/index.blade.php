@@ -101,5 +101,5 @@
 <!-- Data table plugin-->
 <script type="text/javascript" src="{{ asset('assets/js/plugins/jquery.dataTables.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/plugins/dataTables.bootstrap.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/validations/payments.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/validations/payments.js') }}?v=0.1"></script>
 @endsection

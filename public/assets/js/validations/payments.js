@@ -1,4 +1,5 @@
 $('#sampleTable').DataTable({
+	"order": [], // Disable initial ordering
     "footerCallback": function (row, data, start, end, display) {
         var api = this.api();
 
