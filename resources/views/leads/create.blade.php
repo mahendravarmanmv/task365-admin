@@ -134,12 +134,12 @@
               <label>When do you need service?</label>
               <select name="service_timeframe" class="form-control">
                 <option value="">Select Timeline</option>
-                <option value="Immediately" {{ old('service_timeline') == 'Immediately' ? 'selected' : '' }}>Immediately</option>
-                <option value="In the next 3 days" {{ old('service_timeline') == 'In the next 3 days' ? 'selected' : '' }}>In the next 3 days</option>
-                <option value="In the next 7 days" {{ old('service_timeline') == 'In the next 7 days' ? 'selected' : '' }}>In the next 7 days</option>
-                <option value="In the next 15 days" {{ old('service_timeline') == 'In the next 15 days' ? 'selected' : '' }}>In the next 15 days</option>
-                <option value="Within a month" {{ old('service_timeline') == 'Within a month' ? 'selected' : '' }}>Within a month</option>
-                <option value="After a month" {{ old('service_timeline') == 'After a month' ? 'selected' : '' }}>After a month</option>
+                <option value="Immediately" {{ old('service_timeframe') == 'Immediately' ? 'selected' : '' }}>Immediately</option>
+                <option value="In the next 3 days" {{ old('service_timeframe') == 'In the next 3 days' ? 'selected' : '' }}>In the next 3 days</option>
+                <option value="In the next 7 days" {{ old('service_timeframe') == 'In the next 7 days' ? 'selected' : '' }}>In the next 7 days</option>
+                <option value="In the next 15 days" {{ old('service_timeframe') == 'In the next 15 days' ? 'selected' : '' }}>In the next 15 days</option>
+                <option value="Within a month" {{ old('service_timeframe') == 'Within a month' ? 'selected' : '' }}>Within a month</option>
+                <option value="After a month" {{ old('service_timeframe') == 'After a month' ? 'selected' : '' }}>After a month</option>
               </select>
               @error('service_timeframe') <div class="text-danger">{{ $message }}</div> @enderror
             </div>
@@ -163,7 +163,7 @@
           <div class="row mb-3">
             <div class="col-md-6">
               <label>Upload File (JPG/JPEG only)</label>
-              <input type="file" name="lead_file" class="form-control" accept=".jpg,.jpeg" required>
+              <input type="file" name="lead_file" class="form-control" accept=".jpg,.jpeg">
               @error('lead_file')
               <div class="text-danger">{{ $message }}</div>
               @enderror

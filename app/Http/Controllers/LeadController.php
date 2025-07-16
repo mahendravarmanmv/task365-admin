@@ -110,7 +110,8 @@ class LeadController extends Controller
 
         // ✅ Send bulk SMS if numbers exist
         if (count($phoneNumbers)) {
-            $leadUrl = "task365.in/leads/{$lead->id}";
+            $encodedId = encode_id($lead->id); // e.g., "dxE"
+            $leadUrl = 'task365.in/l/' . $encodedId;
             $this->sendBulkSMS($phoneNumbers, $leadUrl);
         }
 
@@ -198,11 +199,12 @@ class LeadController extends Controller
         $messagetype = 1;
         $dnd_check = 0;
 
-        $message = "Task365: Dear User , New lead generated for your category. View details: ".$leadUrl." – by LORHAN SPOT EARN Private Limited. Thank you for choosing Task365.";
+        $message = "Task365: Dear sds , New lead generated for your asdas . View details: dasd .
+     Thank you for choosing Task365 ( A product of LORHAN SPOT EARN Private Limited).";
         $messageEncoded = urlencode($message);
 
         // Convert array to comma-separated string
-        $numbers = implode(',', $phoneNumbers);       
+        $numbers = implode(',', $phoneNumbers);   
 
         $request = [
             'username' => $username,
