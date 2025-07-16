@@ -199,8 +199,7 @@ class LeadController extends Controller
         $messagetype = 1;
         $dnd_check = 0;
 
-        $message = "Task365: Dear sds , New lead generated for your asdas . View details: dasd .
-     Thank you for choosing Task365 ( A product of LORHAN SPOT EARN Private Limited).";
+        $message = "Task365: Dear User , New lead generated for your category. View details: ".$leadUrl." – by LORHAN SPOT EARN Private Limited. Thank you for choosing Task365.";
         $messageEncoded = urlencode($message);
 
         // Convert array to comma-separated string
