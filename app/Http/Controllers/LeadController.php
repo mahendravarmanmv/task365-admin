@@ -112,7 +112,8 @@ class LeadController extends Controller
         if (count($phoneNumbers)) {
             $encodedId = encode_id($lead->id); // e.g., "dxE"
             $leadUrl = 'task365.in/l/' . $encodedId;
-            $this->sendBulkSMS($phoneNumbers, $leadUrl);
+            $categoryTitle = $lead->category->category_title ?? 'your selected category';
+            $this->sendBulkSMS($phoneNumbers, $leadUrl,$categoryTitle);
         }
 
         return redirect()->route('leads.index')->with('success', '✅ Lead created successfully, emails and SMS sent.');
@@ -191,7 +192,7 @@ class LeadController extends Controller
         return redirect()->route('leads.index')->with('success', 'Lead deleted successfully.');
     }
 
-    public function sendBulkSMS(array $phoneNumbers, $leadUrl)
+    public function sendBulkSMS(array $phoneNumbers, $leadUrl,$categoryTitle)
     {
         $username = env('SMS_USERNAME');
         $password = env('SMS_PASSWORD');
@@ -199,7 +200,12 @@ class LeadController extends Controller
         $messagetype = 1;
         $dnd_check = 0;
 
-        $message = "Task365: Dear User , New lead generated for your category. View details: ".$leadUrl." – by LORHAN SPOT EARN Private Limited. Thank you for choosing Task365.";
+        /*$message = "Task365: Dear User , New lead generated for your category. View details: ".$leadUrl." – by LORHAN SPOT EARN Private Limited. Thank you for choosing Task365.";*/
+
+        $message = "Task365: 
+     Dear User , New lead generated for your ".$categoryTitle." . View details: ".$leadUrl." .
+     Thank you for choosing Task365 ( A product of LORHAN SPOT EARN Private Limited).";
+
         $messageEncoded = urlencode($message);
 
         // Convert array to comma-separated string
