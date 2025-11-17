@@ -18,7 +18,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WebsiteTypeController;
 use Illuminate\Http\Request;
 
-Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::get('/signup', [RegisteredUserController::class, 'create'])->name('signup');
 Route::post('/signup', [RegisteredUserController::class, 'store']);
